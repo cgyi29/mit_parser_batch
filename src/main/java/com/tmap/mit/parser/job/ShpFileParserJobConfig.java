@@ -1,8 +1,7 @@
 package com.tmap.mit.parser.job;
 
 import com.tmap.mit.parser.constant.JobName;
-import jakarta.persistence.EntityManagerFactory;
-import lombok.RequiredArgsConstructor;
+import com.tmap.mit.parser.constant.StepName;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,25 +15,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * file을 파싱하기 위한 job
+ * extension '.shp' file parsing job
  */
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
-public class FileParserJobConfig {
-    private final EntityManagerFactory entityManagerFactory;
-    private final int CHUNK_SIZE = 1000;
-
+public class ShpFileParserJobConfig {
     @Bean
     public Job fileParserJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder(, jobRepository)
-                .start(shpeFileParserStep(jobRepository, transactionManager))
+        return new JobBuilder(JobName.FILE_PARSER, jobRepository)
+                .start(shpFileParserStep(jobRepository, transactionManager))
                 .build();
     }
 
     @Bean
-    public Step shpeFileParserStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder(SHAPE_FILE_PARSER_STEP, jobRepository)
+    public Step shpFileParserStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder(StepName.SHAPE_FILE_PARSER, jobRepository)
                 .tasklet(testTasklet(), transactionManager)
                 .build();
     }
@@ -48,32 +43,5 @@ public class FileParserJobConfig {
             return RepeatStatus.FINISHED;
         });
     }
-
-    /*@Bean
-    @StepScope
-    public JpaCursorItemReader<PassEntity> expirePassesItemReader() {
-        return new JpaCursorItemReaderBuilder<PassEntity>()
-                .name("expirePassesItemReader")
-                .entityManagerFactory(entityManagerFactory)
-                // 상태(status)가 진행중이며, 종료일시(endedAt)이 현재 시점보다 과거일 경우 만료 대상이 됩니다.
-                .queryString("select p from PassEntity p where p.status = :status and p.endedAt <= :endedAt")
-                .parameterValues(Map.of("status", PassStatus.PROGRESSED, "endedAt", LocalDateTime.now()))
-                .build();
-    }*/
-
-    /*@Bean
-    public ItemProcessor<PassEntity, PassEntity> expirePassesItemProcessor() {
-        return passEntity -> {
-            passEntity.setStatus(PassStatus.EXPIRED);
-            passEntity.setExpiredAt(LocalDateTime.now());
-            return passEntity;
-        };
-    }
-    @Bean
-    public JpaItemWriter<PassEntity> expirePassesItemWriter() {
-        return new JpaItemWriterBuilder<PassEntity>()
-                .entityManagerFactory(entityManagerFactory)
-                .build();
-    }*/
 
 }

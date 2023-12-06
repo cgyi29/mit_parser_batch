@@ -1,1 +1,8 @@
-
+spring:
+  profiles:
+    active: ${}
+  batch:
+#    jdbc:
+#      initialize-schema: always
+    job:
+      name: ${job.name:NONE}
