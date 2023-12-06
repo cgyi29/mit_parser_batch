@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
  * db properties config
  */
 @Configuration
-@PropertySource(value = {"classpath:properties/jdbc-local.properties"})
+@PropertySource(value = {"classpath:properties/jdbc-${spring.profiles.active}.properties"})
 public class ConfigProperties {
     @Bean(name = DataResourceName.COMMON_DB_CONFIG_NM)
     @Primary

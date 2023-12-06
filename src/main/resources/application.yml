@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: ${}
   batch:
 #    jdbc:
 #      initialize-schema: always
