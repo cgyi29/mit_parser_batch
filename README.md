@@ -7,5 +7,5 @@ Project Run 하기 전 Run/Debug Configuratoins Setting
 ```
 - Active profiles
 ```
-local or dev or prd
+local / dev / prd
 ```
